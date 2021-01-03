@@ -9,12 +9,25 @@ const WelcomeScreen = () => {
     container: {
       backgroundColor: colors.primary,
       height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    imageCon: {
+      width: 150,
+      height: 150,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
     },
   });
 
   return (
     <BasicScreen style={styles.container}>
-      <View>{/* <Image source={require('../images/icon.png')} /> */}</View>
+      <View style={styles.imageCon}>
+        <Image style={styles.image} source={require('../images/icon.png')} />
+      </View>
     </BasicScreen>
   );
 };
