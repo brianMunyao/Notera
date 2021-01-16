@@ -1,14 +1,23 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import BasicScreen from '../components/BasicScreen';
+import HomeScreen from './HomeScreen';
+import AddTask from './AddTask';
+import SettingsScreen from './SettingsScreen';
 
 const MainScreen = () => {
-  return (
-    <BasicScreen>
-      <Text>kjfkj</Text>
-    </BasicScreen>
-  );
+  const Stack = createStackNavigator();
+  const renderStack = () => {
+    return (
+      <Stack.Navigator mode="modal" screenOptions={{headerShown: false}}>
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="AddTask" component={AddTask} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+      </Stack.Navigator>
+    );
+  };
+
+  return renderStack();
 };
 
 export default MainScreen;

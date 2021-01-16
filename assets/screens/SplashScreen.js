@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 
 import BasicScreen from '../components/BasicScreen';
 import colors from '../config/colors';
 
-const WelcomeScreen = () => {
+const SplashScreen = ({navigation, route}) => {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.primary,
@@ -23,6 +23,10 @@ const WelcomeScreen = () => {
     },
   });
 
+  useEffect(() => {
+    setTimeout(() => navigation.navigate(route.params.to), 2000);
+  }, [navigation, route.params.to]);
+
   return (
     <BasicScreen style={styles.container}>
       <View style={styles.imageCon}>
@@ -32,4 +36,4 @@ const WelcomeScreen = () => {
   );
 };
 
-export default WelcomeScreen;
+export default SplashScreen;

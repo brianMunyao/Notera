@@ -222,3 +222,6 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 dependencies {
     implementation project(':realm')
 }
+
+//icons
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

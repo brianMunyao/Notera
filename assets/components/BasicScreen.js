@@ -1,12 +1,25 @@
-import React from 'react';
-import {Platform, SafeAreaView, StatusBar} from 'react-native';
+import React, {useContext} from 'react';
+import {Platform, SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 
-const BasicScreen = ({children, style}) => {
-  const topPad = Platform.OS === 'android' ? 40 : 0;
+import {DataContext} from '../config/DataProvider';
 
+const BasicScreen = ({children, bar, style}) => {
+  const topPad = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+  const {darkTheme} = useContext(DataContext);
+
+  const myStyles = StyleSheet.create({
+    container: {
+      paddingTop: topPad,
+      flex: 1,
+    },
+  });
   return (
-    <SafeAreaView style={{paddingTop: topPad, ...style}}>
-      <StatusBar translucent backgroundColor="transparent" />
+    <SafeAreaView style={[myStyles.container, {...style}]}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={darkTheme ? 'light-content' : 'dark-content'}
+      />
       {children}
     </SafeAreaView>
   );
