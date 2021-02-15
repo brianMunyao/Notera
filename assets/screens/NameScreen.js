@@ -1,5 +1,12 @@
 import React, {useContext, useState} from 'react';
-import {Image, StyleSheet, TextInput, ToastAndroid, View} from 'react-native';
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AppButton from '../components/AppButton';
 
@@ -11,12 +18,14 @@ import colors from '../config/colors';
 
 const NameScreen = () => {
   const [name, setName] = useState('');
-  const {saveName} = useContext(DataContext);
+  const {changeSettings} = useContext(DataContext);
 
   const saveNewName = () => {
     const tempName = name.trim();
-    if (tempName !== '') {
-      saveName(tempName);
+    if (tempName === '') {
+      ToastAndroid.show('Name cannot be empty', ToastAndroid.SHORT);
+    } else {
+      changeSettings('user', tempName);
     }
   };
   const handleName = (text) => {
@@ -73,6 +82,7 @@ const NameScreen = () => {
 
   return (
     <BasicScreen style={styles.container}>
+      <StatusBar barStyle="light-content" />
       <View style={styles.topInfo}>
         <Image source={require('../images/icon.png')} style={styles.image} />
         <AppText type="Bold" style={styles.nameLbl}>

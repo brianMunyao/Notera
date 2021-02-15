@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Switch, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -10,7 +10,7 @@ import SettingsItem from '../components/SettingsItem';
 import colors from '../config/colors';
 
 const SettingsScreen = ({navigation: {navigate}}) => {
-  const {settings, changeSettings} = useContext(DataContext);
+  const {settings, changeSettings, deleteData} = useContext(DataContext);
 
   const styles = StyleSheet.create({
     topBar: {
@@ -45,7 +45,6 @@ const SettingsScreen = ({navigation: {navigate}}) => {
       changeSettings(setting, String(!sValue));
     }
   };
-  const handleDelete = () => {};
 
   const settingsTitle = (title) => {
     return (
@@ -113,7 +112,7 @@ const SettingsScreen = ({navigation: {navigate}}) => {
           <SettingsItem
             icon="trash-outline"
             title="Delete Data"
-            onPress={handleDelete}
+            onPress={deleteData}
           />
         </View>
       </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, StatusBar} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AppButton from '../components/AppButton';
 
@@ -52,6 +52,7 @@ const NewUserScreen = ({navigation}) => {
   });
   return (
     <BasicScreen style={styles.container}>
+      <StatusBar barStyle="light-content" />
       <View style={styles.topInfo}>
         <Image source={require('../images/icon.png')} style={styles.image} />
 

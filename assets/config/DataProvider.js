@@ -5,8 +5,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import {DevSettings} from 'react-native';
 import Realm from 'realm';
-import realm from './Schema';
+import {Config, Todo} from './Schema';
 
 const DataContext = createContext();
 
@@ -20,60 +21,52 @@ const DataProvider = ({children}) => {
 
   const [error, setError] = useState();
 
-  // let realm = useRef(null);
+  let realm = useRef(null);
+
+  //initilize config
+  const defaultConfig = [
+    {key: 'user', value: ''},
+    {key: 'notifications', value: 'false'},
+    {key: 'darkTheme', value: 'false'},
+  ];
 
   useEffect(() => {
-    // initDB();
-    getSettings();
+    initDB();
     getTodos();
-  }, [getTodos, getSettings]);
+  }, [initDB, getTodos]);
 
-  // const initDB = useCallback(() => {
-  //   realm.current = new Realm({
-  //     path: 'Notera.realm',
-  //     schema: [Todo, Config],
-  //   });
+  const initDB = useCallback(() => {
+    realm.current = new Realm({
+      path: 'Notera.realm',
+      schema: [Todo, Config],
+    });
 
-  //   //initilize config
-  //   const defaultConfig = [
-  //     {key: 'user', value: ''},
-  //     {key: 'notifications', value: 'false'},
-  //     {key: 'darkTheme', value: 'false'},
-  //   ];
-
-  //   try {
-  //     realm.current.write(() => {
-  //       if (realm.current.objects('config').length === 0) {
-  //         for (let i = 0; i < defaultConfig.length; i++) {
-  //           realm.current.create('config', defaultConfig[i]);
-  //         }
-  //       }
-  //     });
-  //   } catch (e) {
-  //     console.log('init', e);
-  //   }
-  // }, [Config, Todo]);
-
-  const getSettings = useCallback(() => {
+    const _realm = realm.current;
     try {
-      const tempObj = {};
-      realm.write(() => {
-        const res = realm.objects('config');
-        for (let i = 0; i < res.length; i++) {
-          tempObj[res[i].key] = res[i].value;
+      _realm.write(() => {
+        if (_realm.objects('config').length === 0) {
+          for (let i = 0; i < defaultConfig.length; i++) {
+            _realm.create('config', defaultConfig[i]);
+          }
         }
-
-        setSettings(tempObj);
       });
-    } catch (e) {
-      console.log('getUserSettings', e);
-    }
-  }, []);
+
+      const tempSettings = {};
+      _realm.write(() => {
+        const res = _realm.objects('config');
+        for (let i = 0; i < res.length; i++) {
+          tempSettings[res[i].key] = res[i].value;
+        }
+        setSettings(tempSettings);
+      });
+    } catch (e) {}
+  }, [defaultConfig]);
 
   const changeSettings = (setting, value) => {
     try {
-      realm.write(() => {
-        const res = realm.objects('config');
+      const _realm = realm.current;
+      _realm.write(() => {
+        const res = _realm.objects('config');
         if (res.length > 0) {
           for (let i = 0; i < res.length; i++) {
             if (res[i].key === setting) {
@@ -88,29 +81,13 @@ const DataProvider = ({children}) => {
           }
         }
       });
-    } catch (e) {
-      console.log('changeSettings', e);
-    }
-  };
-
-  const saveName = (name) => {
-    try {
-      realm.write(() => {
-        const dbSearch = realm.objects('config').filtered('key="user"');
-        if (dbSearch.length > 0) {
-          dbSearch[0].value = name;
-        }
-      });
-      getSettings();
-    } catch (e) {
-      console.log('saveName', e);
-    }
+    } catch (e) {}
   };
 
   const getTodos = useCallback(() => {
     let tempTodos = [];
     try {
-      tempTodos = realm.objects('todos').sorted('todo_id', true);
+      tempTodos = realm.current.objects('todos').sorted('todo_id', true);
     } catch (e) {
       console.log(e);
     }
@@ -126,7 +103,7 @@ const DataProvider = ({children}) => {
   const searchById = (id) => {
     let res = [];
     try {
-      res = realm.objects('todos').filtered('todo_id=' + id);
+      res = realm.current.objects('todos').filtered('todo_id=' + id);
     } catch (e) {
       res = [];
     }
@@ -145,12 +122,12 @@ const DataProvider = ({children}) => {
       todo_done: false,
     };
 
-    realm.write(() => realm.create('todos', tempObj));
+    realm.current.write(() => realm.current.create('todos', tempObj));
     getTodos();
   };
 
   const checkTodo = (obj) => {
-    realm.write(() => {
+    realm.current.write(() => {
       const dbSearch = searchById(obj.todo_id);
 
       if (dbSearch.length > 0) {
@@ -174,17 +151,30 @@ const DataProvider = ({children}) => {
   };
 
   const deleteTodo = (id) => {
-    realm.write(() => {
+    const _realm = realm.current;
+    _realm.write(() => {
       const dbSearch = searchById(id);
 
       if (dbSearch.length > 0) {
-        realm.delete(realm.objects('todos').filtered('todo_id=' + id));
+        _realm.delete(_realm.objects('todos').filtered('todo_id=' + id));
       }
     });
 
     getTodos();
   };
-  const deleteData = () => {};
+  const deleteData = () => {
+    const _realm = realm.current;
+    try {
+      const tempTodos = _realm.objects('todos');
+      const tempConfig = _realm.objects('config');
+
+      _realm.write(() => {
+        _realm.delete(tempTodos);
+        _realm.delete(tempConfig);
+      });
+      DevSettings.reload();
+    } catch (e) {}
+  };
 
   return (
     <DataContext.Provider
@@ -194,12 +184,12 @@ const DataProvider = ({children}) => {
         todos,
         doneTodos,
         undoneTodos,
-        saveName,
         addTodo,
         updateTodo,
         checkTodo,
         deleteTodo,
         changeSettings,
+        deleteData,
       }}>
       {children}
     </DataContext.Provider>

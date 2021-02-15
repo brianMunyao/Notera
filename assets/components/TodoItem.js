@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {DataContext} from '../config/DataProvider';
@@ -71,30 +70,19 @@ const TodoItem = ({data, onDoublePress, onDelete}) => {
 
   const iconName = todo_done ? 'checkmark-circle' : 'ellipse-outline';
 
-  const renderRightActions = () => (
-    <AppButton style={styles.delete} onPress={onDelete}>
-      <Icon name="trash-outline" size={20} />
-    </AppButton>
-  );
-
   return (
-    <Swipeable
-      friction={2}
-      renderRightActions={renderRightActions}
-      overshootRight={false}>
-      <TouchableWithoutFeedback onPress={handleDoublePress}>
-        <View style={styles.container}>
-          <AppButton style={styles.todoIcon} onPress={() => checkTodo(data)}>
-            <Icon name={iconName} size={22} color={colors.grey} />
-          </AppButton>
-          <View style={styles.todoTextCon}>
-            <AppText style={styles.todoText} type="SemiBold">
-              {todo_text}
-            </AppText>
-          </View>
+    <TouchableWithoutFeedback onPress={handleDoublePress}>
+      <View style={styles.container}>
+        <AppButton style={styles.todoIcon} onPress={() => checkTodo(data)}>
+          <Icon name={iconName} size={22} color={colors.grey} />
+        </AppButton>
+        <View style={styles.todoTextCon}>
+          <AppText style={styles.todoText} type="SemiBold">
+            {todo_text}
+          </AppText>
         </View>
-      </TouchableWithoutFeedback>
-    </Swipeable>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

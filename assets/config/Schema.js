@@ -1,5 +1,3 @@
-import Realm from 'realm';
-
 const Todo = {
   name: 'todos',
   properties: {
@@ -18,10 +16,4 @@ const Config = {
   primaryKey: 'key',
 };
 
-const realm = new Realm({
-  path: 'Notera.realm',
-  schema: [Todo, Config],
-  schemaVersion: 1,
-});
-
-export default realm;
+export {Todo, Config};

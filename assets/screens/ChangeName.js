@@ -9,8 +9,8 @@ import AppText from '../components/AppText';
 import BasicScreen from '../components/BasicScreen';
 import colors from '../config/colors';
 
-const ChangeName = ({navigation: {goBack, navigate}}) => {
-  const {saveName, settings, darkTheme} = useContext(DataContext);
+const ChangeName = ({navigation: {goBack}}) => {
+  const {changeSettings, settings, darkTheme} = useContext(DataContext);
 
   const [newName, setNewName] = useState('');
 
@@ -84,8 +84,8 @@ const ChangeName = ({navigation: {goBack, navigate}}) => {
   });
 
   const handleChange = () => {
-    saveName(newName);
-    navigate('HomeScreen');
+    changeSettings('user', newName);
+    goBack();
   };
 
   return (
