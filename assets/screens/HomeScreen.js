@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import {DataContext} from '../config/DataProvider';
 
@@ -14,7 +15,6 @@ import SearchBar from '../components/SearchBar';
 import ListSeparator from '../components/ListSeparator';
 import ListEmpty from '../components/ListEmpty';
 import ListFooter from '../components/ListFooter';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const HomeScreen = ({navigation: {navigate}}) => {
   const {settings, darkTheme, doneTodos, undoneTodos, deleteTodo} = useContext(
@@ -62,6 +62,7 @@ const HomeScreen = ({navigation: {navigate}}) => {
           name="settings-outline"
           size={25}
           color={colors.grey}
+          style={styles.settingsIcon}
           onPress={() => navigate('Settings')}
         />
       </View>
@@ -145,7 +146,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    height: 45,
+  },
+  settingsIcon: {
+    marginLeft: 20,
   },
   greetingCon: {
     padding: 20,

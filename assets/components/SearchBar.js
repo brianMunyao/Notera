@@ -18,9 +18,8 @@ const SearchBar = ({autoFocus, value, onPress, onChangeText}) => {
     container: {
       position: 'relative',
       backgroundColor: darkTheme ? colors.darkGrey : colors.greyMid,
-      height: '100%',
+      height: 45,
       flex: 1,
-      marginRight: 20,
       borderRadius: 25,
       overflow: 'hidden',
     },
